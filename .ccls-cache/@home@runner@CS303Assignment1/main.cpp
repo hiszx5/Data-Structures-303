@@ -1,64 +1,76 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <array>
-#include <vector>
 #include <iomanip>
 #include "functions.h"
 
 int main() {
 
-  //Functionality Testing
-  std::vector<int> data = populateArray("data.txt"); //test of populateArray function
-  std::cout << "Data was read from file successfully." << std::endl << "Contents of array: " << std::endl;
-  int lineLength = 0;
-  for (int i = 0; i < data.size(); i++) { //outputting the array
-      if (lineLength != 10) {
-        std::cout << std::setw(5) << data.at(i);
-        lineLength += 1;
-      }
-      else {
-        std::cout << std::endl << std::setw(5) << data.at(i);
-        lineLength = 1;
-      }
+  //creating variables to populate initial array
+  int outputNumber;
+  int userIndex;
+  int userNumber;
+  char menuOption;
+  int size = 100;
+  int* array = new int[size];
+  unsigned int index = 0;
+  int dataPoint;
+  std::ifstream file("text.txt");
+
+  //loop to populate array
+  if (file.is_open()) {
+    while (file >> dataPoint) {
+      array[index] = dataPoint;
+      index += 1;
     }
+  }
 
-  std::cout << std::endl << std::endl << "(Checking the index of value 56 in array, should return 55)";
-  std::cout << std::endl << "Index of 56: " << doesExsist(data, 0, data.size() - 1, 56) << std::endl; // tests doesExsist
 
-  modifyValue(data, 66, 98);
-
-  addValue(data, 234);
-
-  removeValue(data, 32);
-
-  std::cout << std::endl << "Updates to Array:" << std::endl << "1) 66 should be replaced with 98" << std::endl << "2) 234 should be at the end of the array" << std::endl << "3) 32 should be removed from the array" << std::endl << std::endl << "Updated array: " << std::endl;
-
-  lineLength = 0;
-    for (int i = 0; i < data.size(); i++) { //outputting the array
-        if (lineLength != 10) {
-          std::cout << std::setw(5) << data.at(i);
-          lineLength += 1;
+  while (menuOption != 'Q') {
+    printArray(array, size);
+    printMenu();
+    std::cin >> menuOption;
+    switch (menuOption) {
+      case 'F':
+        std::cout << "Enter number to search for -> ";
+        std::cin >> userNumber;
+        userIndex = checkIndex(array, userNumber, size);
+        if (userIndex == -1) {
+          std::cout << "Number does not exsist in array.";
         }
         else {
-          std::cout << std::endl << std::setw(5) << data.at(i);
-          lineLength = 1;
+          std::cout << userNumber << " exsists in index " << userIndex << "." << std::endl << std::endl;
         }
-      }
+        break;
+      case 'M':
+          std::cout << "Enter index to change -> ";
+          std::cin >> userIndex;
+          std::cout << "Enter new number for index " << userIndex << " -> ";
+          std::cin >> userNumber;
+          outputNumber = modifyIndex(array, userIndex, userNumber);
+          std::cout << outputNumber << " was replaced by " << userNumber << "." << std::endl;
+        break;
+      case 'A':
+        std::cout << "Enter a number to add to array -> ";
+        std::cin >> userNumber;
+        addIndex(array, userNumber, size);
+        std::cout << userNumber << " was successfully added to the array." << std::endl << std::endl;
+        break;
+      case 'R':
+        std::cout << "Enter index to remove -> ";
+        std::cin >> userIndex;
+        del_val(array, size, userIndex);
+        
+        std::cout << std::endl << "Index " << userIndex << " was successfully removed from the array." << std::endl;
+        break;
+      case 'Q':
+        std::cout << "Exiting program.";
+      default :
+        std::cout << "Hello";
+    }
+  }
 
-  
 
-  
 
-  
-
-  
-  
-
-  
-
-  
-  
-  
   
 }
